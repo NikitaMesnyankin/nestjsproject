@@ -6,6 +6,7 @@ import {
   UserNotFound,
 } from "./errors";
 import * as i from "../entities/interfaces";
+import { UserEntity } from "../entities/user.entity";
 
 @Injectable()
 export class UsersService {
@@ -41,5 +42,12 @@ export class UsersService {
       activationStatus: activationResult.isActivated,
       activationLink: null,
     };
+  }
+
+  async getAllUsers(
+    count: number,
+    page: number,
+  ): Promise<Partial<UserEntity>[]> {
+    return await this.userDao.getAllUsers(count, page);
   }
 }

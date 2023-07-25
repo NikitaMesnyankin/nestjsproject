@@ -1,6 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, Matches, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsNumber,
+  IsString,
+  Matches,
+  Min,
+  Max,
+  MinLength,
+  IsInt,
+} from "class-validator";
 import * as i from "../../entities/interfaces";
+import { Type } from "class-transformer";
 
 export class UserDto implements i.Interfaces.User {
   @ApiProperty({
@@ -36,4 +46,23 @@ export class UserActivationLinkDto {
   })
   @IsString()
   activationLink: string;
+}
+
+export class PaginationDto {
+  @ApiProperty({
+    required: true,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number;
+
+  @ApiProperty({
+    required: true,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @Min(10)
+  @Max(50)
+  count: number;
 }

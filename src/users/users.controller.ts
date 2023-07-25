@@ -1,10 +1,10 @@
-import { Body, Controller, HttpCode, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import * as i from "../entities/interfaces";
-import { UserActivationLinkDto, UserDto } from "./dto/user.dto";
+import { PaginationDto, UserActivationLinkDto, UserDto } from "./dto/user.dto";
 
 @Controller("/users")
-export class UserController {
+export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post("/register")
@@ -24,5 +24,13 @@ export class UserController {
     @Query() query: UserActivationLinkDto,
   ): Promise<i.Interfaces.ActivationData> {
     return await this.userService.activateUserByLink(query.activationLink);
+  }
+
+  @Get()
+  @HttpCode(200)
+  async getAllUsers(
+    @Query() query: PaginationDto,
+  ): Promise<Partial<i.Interfaces.User>[]> {
+    return await this.userService.getAllUsers(query.count, query.page);
   }
 }

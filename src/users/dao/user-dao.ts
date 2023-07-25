@@ -59,6 +59,14 @@ export class UserDao {
       where: whereClause,
     });
   }
+
+  async getAllUsers(count: number, page: number): Promise<UserEntity[]> {
+    return this.userRepository.find({
+      select: ["id", "nickname", "rating", "about"],
+      take: count,
+      skip: count * (page - 1),
+    });
+  }
 }
 
 export type UserData = Partial<UserEntity>;
