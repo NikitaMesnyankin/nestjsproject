@@ -15,14 +15,14 @@ export namespace Interfaces {
   }
 
   export interface Film {
-    id: number;
+    id?: number;
     name: string;
     country: Countries;
     author: string;
-    averageRating: number;
+    averageRating?: number;
     description: string | null;
-    createdAt: string;
-    modifiedAt: string;
+    createdAt?: string;
+    modifiedAt?: string;
   }
 
   export interface Review {

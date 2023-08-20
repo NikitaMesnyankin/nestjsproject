@@ -1,16 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsEmail,
-  IsNumber,
   IsString,
   Matches,
-  Min,
-  Max,
   MinLength,
-  IsInt,
+  NotEquals,
+  IsUUID,
 } from "class-validator";
 import * as i from "../../entities/interfaces";
-import { Type } from "class-transformer";
 
 export class UserDto implements i.Interfaces.User {
   @ApiProperty({
@@ -21,6 +18,7 @@ export class UserDto implements i.Interfaces.User {
   @IsString()
   @MinLength(10)
   @Matches(/([a-z]|\d)*/)
+  @NotEquals("null")
   login: string;
 
   @ApiProperty({
@@ -44,25 +42,6 @@ export class UserActivationLinkDto {
   @ApiProperty({
     required: true,
   })
-  @IsString()
+  @IsUUID()
   activationLink: string;
-}
-
-export class PaginationDto {
-  @ApiProperty({
-    required: true,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page: number;
-
-  @ApiProperty({
-    required: true,
-  })
-  @Type(() => Number)
-  @IsInt()
-  @Min(10)
-  @Max(50)
-  count: number;
 }

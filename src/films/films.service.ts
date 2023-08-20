@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { FilmDao, FilmData } from "./dao/film-dao";
-import * as i from "../entities/interfaces";
 import { FilmEntity } from "../entities/film.entity";
 import { FilmAlreadyExists } from "./errors";
 
@@ -8,17 +7,13 @@ import { FilmAlreadyExists } from "./errors";
 export class FilmsService {
   constructor(private readonly filmDao: FilmDao) {}
 
-  // async addFilm(filmData: FilmData): Promise<i.Interfaces.Film> {
-  //   if (await this.filmDao.findFilmByFilter(filmData)) {
-  //     throw new FilmAlreadyExists();
-  //   }
-  //   const filmCreationResult = await this.filmDao.createFilm(filmData);
-  //   return {
-  //     login: registrationResult.login,
-  //     activationLink: registrationResult.activationLink,
-  //     activationStatus: registrationResult.isActivated,
-  //   };
-  // }
+  //TODO: add found film id return in error message to redirect client if creation failed
+  async addFilm(filmData: FilmData): Promise<FilmEntity> {
+    if ((await this.filmDao.findFilmByFilter(filmData))?.length) {
+      throw new FilmAlreadyExists();
+    }
+    return await this.filmDao.createFilm(filmData);
+  }
 
   async getAllFilms(
     count: number,

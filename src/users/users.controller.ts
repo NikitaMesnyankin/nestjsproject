@@ -1,7 +1,8 @@
 import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import * as i from "../entities/interfaces";
-import { PaginationDto, UserActivationLinkDto, UserDto } from "./dto/user.dto";
+import { UserActivationLinkDto, UserDto } from "./dto/user.dto";
+import { PaginationDto } from "../helpers/dto";
 
 @Controller("/users")
 export class UsersController {
