@@ -29,7 +29,7 @@ export class FilmDto implements i.Interfaces.Film {
   @ApiProperty({
     required: true,
     description: "Film creation country",
-    type: i.Interfaces.Countries,
+    enum: i.Interfaces.Countries,
   })
   @IsEnum(i.Interfaces.Countries)
   country: i.Interfaces.Countries;

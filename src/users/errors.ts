@@ -30,6 +30,36 @@ export class UserNotFound extends HttpException {
   }
 }
 
+export class MultipleUsersFound extends HttpException {
+  static message = "Found multiple users with specified activation link";
+
+  constructor() {
+    super(
+      {
+        statusCode: 409,
+        message: MultipleUsersFound.message,
+        error: "Conflict",
+      },
+      409,
+    );
+  }
+}
+
+export class UserAccountNotActivated extends HttpException {
+  static message = "User accout is not activated!";
+
+  constructor() {
+    super(
+      {
+        statusCode: 400,
+        message: UserAccountNotActivated.message,
+        error: "Bad request",
+      },
+      400,
+    );
+  }
+}
+
 export class ActivationLinkAlreadyUsed extends HttpException {
   static message = "Activation link already used.";
 

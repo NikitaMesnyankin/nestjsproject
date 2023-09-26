@@ -4,8 +4,10 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
 } from "typeorm";
 import * as i from "./interfaces";
+import { ReviewEntity } from "./review.entity";
 
 @Entity({
   name: "films",
@@ -20,7 +22,6 @@ export class FilmEntity implements i.Interfaces.Film {
   name: string;
 
   @Column({
-    type: "enum",
     nullable: false,
     enum: i.Interfaces.Countries,
     default: i.Interfaces.Countries.UNK,
@@ -41,4 +42,7 @@ export class FilmEntity implements i.Interfaces.Film {
 
   @UpdateDateColumn({ name: "modified_at", type: "timestamp with time zone" })
   modifiedAt: string;
+
+  @OneToMany((type) => ReviewEntity, (review) => review.film)
+  reviews: ReviewEntity[];
 }

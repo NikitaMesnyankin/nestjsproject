@@ -30,6 +30,13 @@ export class UserEntity implements i.Interfaces.User {
   isActivated: boolean;
 
   @Column({
+    type: "enum",
+    enum: i.Interfaces.Roles,
+    default: i.Interfaces.Roles.STUDENT,
+  })
+  role: i.Interfaces.Roles;
+
+  @Column({
     name: "activation_link",
     type: "uuid",
     nullable: true,
@@ -54,6 +61,7 @@ export class UserEntity implements i.Interfaces.User {
   @Column({ type: "text", nullable: true, default: null })
   about: string;
 
+  @Column({})
   @CreateDateColumn({ name: "created_at", type: "timestamp with time zone" })
   createdAt: string;
 

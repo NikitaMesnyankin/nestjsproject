@@ -4,10 +4,17 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   Column,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import * as i from "./interfaces";
+import { FilmEntity } from "./film.entity";
 
-@Entity()
+@Entity({
+  name: "reviews",
+  synchronize: false,
+  orderBy: { score: "DESC", createdAt: "DESC" },
+})
 export class ReviewEntity implements i.Interfaces.Review {
   @PrimaryGeneratedColumn("increment", { type: "integer" })
   id: number;
@@ -21,7 +28,7 @@ export class ReviewEntity implements i.Interfaces.Review {
   @Column({ type: "text", nullable: true })
   content: string;
 
-  @Column({ type: "float", nullable: false, default: 0.0 })
+  @Column({ type: "integer", nullable: false })
   score: number;
 
   @Column({ type: "integer", nullable: false, default: 0 })
@@ -32,4 +39,8 @@ export class ReviewEntity implements i.Interfaces.Review {
 
   @UpdateDateColumn({ name: "modified_at", type: "timestamp with time zone" })
   modifiedAt: string;
+
+  @ManyToOne((type) => FilmEntity, (film) => film.reviews)
+  @JoinColumn({ name: "film_id" })
+  film: FilmEntity;
 }

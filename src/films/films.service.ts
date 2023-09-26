@@ -9,7 +9,7 @@ export class FilmsService {
 
   //TODO: add found film id return in error message to redirect client if creation failed
   async addFilm(filmData: FilmData): Promise<FilmEntity> {
-    if ((await this.filmDao.findFilmByFilter(filmData))?.length) {
+    if ((await this.filmDao.findFilmsByFilter(filmData))?.length) {
       throw new FilmAlreadyExists();
     }
     return await this.filmDao.createFilm(filmData);

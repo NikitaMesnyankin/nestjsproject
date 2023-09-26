@@ -2,11 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { UserDao, UserData } from "./dao/user-dao";
 import {
   ActivationLinkAlreadyUsed,
+  MultipleUsersFound,
   UserAlreadyExists,
   UserNotFound,
 } from "./errors";
 import * as i from "../entities/interfaces";
 import { UserEntity } from "../entities/user.entity";
+import { FindOptionsOrder } from "typeorm";
 
 @Injectable()
 export class UsersService {
@@ -27,13 +29,18 @@ export class UsersService {
   async activateUserByLink(
     activationLink: string,
   ): Promise<i.Interfaces.ActivationData> {
-    const foundUser = await this.userDao.findUserByFilter({
+    const foundUser = await this.userDao.findUsersByFilter({
       activationLink,
     });
-    if (!foundUser) {
+    if (!foundUser.length) {
       throw new UserNotFound();
     }
-    const activationResult = await this.userDao.activateUser(foundUser);
+
+    if (foundUser.length > 1) {
+      throw new MultipleUsersFound();
+    }
+
+    const activationResult = await this.userDao.activateUser(foundUser[0]);
     if (!activationResult) {
       throw new ActivationLinkAlreadyUsed();
     }
@@ -47,7 +54,16 @@ export class UsersService {
   async getAllUsers(
     count: number,
     page: number,
+    order?: FindOptionsOrder<UserEntity>,
   ): Promise<Partial<UserEntity>[]> {
-    return await this.userDao.getAllUsers(count, page);
+    return await this.userDao.getAllUsers(count, page, order);
+  }
+
+  async getUsersByFilters(filters: UserData): Promise<Partial<UserEntity>[]> {
+    return await this.userDao.findUsersByFilter(filters);
+  }
+
+  async getUserById(id: number): Promise<Partial<UserEntity> | null> {
+    return await this.userDao.getUserById(id);
   }
 }

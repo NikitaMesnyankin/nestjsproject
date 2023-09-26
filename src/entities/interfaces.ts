@@ -1,3 +1,4 @@
+import { FindOptionsOrderValue } from "typeorm";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Interfaces {
   export interface User {
@@ -12,7 +13,13 @@ export namespace Interfaces {
     about?: string | null;
     createdAt?: string;
     modifiedAt?: string;
+    role?: Roles;
   }
+
+  export type UserInReq = Pick<User, keyof User> & { id: number };
+  export type UserReq = Request & {
+    user: UserInReq;
+  };
 
   export interface Film {
     id?: number;
@@ -26,14 +33,20 @@ export namespace Interfaces {
   }
 
   export interface Review {
-    id: number;
+    id?: number;
     authorId: number;
     filmId: number;
     content: string | null;
     score: number;
-    karma: number;
-    createdAt: string;
-    modifiedAt: string;
+    karma?: number;
+    createdAt?: string;
+    modifiedAt?: string;
+  }
+
+  export enum Roles {
+    STUDENT = "STUDENT",
+    ADMIN = "ADMIN",
+    TEACHER = "TEACHER",
   }
 
   export enum Countries {
@@ -48,5 +61,9 @@ export namespace Interfaces {
     login: string;
     activationStatus: boolean;
     activationLink: string;
+  }
+
+  export interface OrderByEntityFields {
+    [x: string]: FindOptionsOrderValue;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOptionsWhere, Repository } from "typeorm";
+import { FindOptionsOrder, FindOptionsWhere, Repository } from "typeorm";
 import { UserEntity } from "../../entities/user.entity";
 import * as bcrypt from "bcrypt";
 
@@ -50,21 +50,32 @@ export class UserDao {
     return null;
   }
 
-  async findUserByFilter(userFilter: UserData): Promise<UserEntity | null> {
+  async findUsersByFilter(userFilter: UserData): Promise<UserEntity[]> {
     const whereClause: FindOptionsWhere<UserEntity> = {};
     for (const filterKey in userFilter) {
       whereClause[filterKey] = userFilter[filterKey];
     }
-    return this.userRepository.findOne({
+    return this.userRepository.find({
       where: whereClause,
     });
   }
 
-  async getAllUsers(count: number, page: number): Promise<UserEntity[]> {
+  async getAllUsers(
+    count: number,
+    page: number,
+    order?: FindOptionsOrder<UserEntity>,
+  ): Promise<UserEntity[]> {
     return this.userRepository.find({
-      select: ["id", "nickname", "rating", "about"],
+      select: ["id", "nickname", "rating", "about", "role"],
       take: count,
       skip: count * (page - 1),
+      order,
+    });
+  }
+
+  async getUserById(id: number): Promise<UserEntity | null> {
+    return this.userRepository.findOneBy({
+      id,
     });
   }
 }

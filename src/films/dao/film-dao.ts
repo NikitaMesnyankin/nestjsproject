@@ -26,7 +26,7 @@ export class FilmDao {
     return newFilm;
   }
 
-  async findFilmByFilter(filmFilter: FilmData): Promise<FilmEntity[] | null> {
+  async findFilmsByFilter(filmFilter: FilmData): Promise<FilmEntity[] | null> {
     const whereClause: FindOptionsWhere<FilmEntity> = {};
     for (const filterKey in filmFilter) {
       whereClause[filterKey] = filmFilter[filterKey];
@@ -40,6 +40,9 @@ export class FilmDao {
     return this.filmRepository.find({
       take: count,
       skip: count * (page - 1),
+      relations: {
+        reviews: true,
+      },
     });
   }
 }
