@@ -32,7 +32,7 @@ export class UserEntity implements i.Interfaces.User {
   @Column({
     type: "enum",
     enum: i.Interfaces.Roles,
-    default: i.Interfaces.Roles.STUDENT,
+    default: i.Interfaces.Roles.USER,
   })
   role: i.Interfaces.Roles;
 

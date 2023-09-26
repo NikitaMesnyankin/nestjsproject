@@ -44,9 +44,9 @@ export namespace Interfaces {
   }
 
   export enum Roles {
-    STUDENT = "STUDENT",
+    USER = "USER",
     ADMIN = "ADMIN",
-    TEACHER = "TEACHER",
+    REVIEWER = "REVIEWER",
   }
 
   export enum Countries {
