@@ -9,6 +9,7 @@ import {
   IsIn,
   ValidateNested,
   IsOptional,
+  IsBoolean,
 } from "class-validator";
 import * as i from "../../entities/interfaces";
 import {
@@ -59,6 +60,15 @@ export class UserActivationLinkDto {
   activationLink: string;
 }
 
+export class UserFilterFields {
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActivated: boolean;
+}
+
 export class UserOrderByFields {
   @ApiProperty({
     required: false,
@@ -81,4 +91,8 @@ export class SearchUsersFieldsDto extends PaginationDto {
   @ValidateNested()
   @Type(() => UserOrderByFields)
   order: UserOrderByFields;
+
+  @ValidateNested()
+  @Type(() => UserFilterFields)
+  filters: UserFilterFields;
 }

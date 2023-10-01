@@ -5,8 +5,16 @@ import {
   NotEquals,
   IsOptional,
   IsEnum,
+  IsIn,
+  ValidateNested,
 } from "class-validator";
 import * as i from "../../entities/interfaces";
+import {
+  OrderDirection,
+  OrderDirections,
+  PaginationDto,
+} from "../../helpers/dto";
+import { Type } from "class-transformer";
 
 export class FilmDto implements i.Interfaces.Film {
   @ApiProperty({
@@ -42,4 +50,41 @@ export class FilmDto implements i.Interfaces.Film {
   @MinLength(100)
   @IsOptional()
   description: string | null;
+}
+
+export class FilmFilterFields {
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  name: string;
+}
+
+export class FilmOrderByFields {
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(OrderDirections)
+  averageRating: OrderDirection;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(OrderDirections)
+  country: OrderDirection;
+}
+
+export class SearchFilmsFieldsDto extends PaginationDto {
+  @ValidateNested()
+  @Type(() => FilmOrderByFields)
+  order: FilmOrderByFields;
+
+  @ValidateNested()
+  @Type(() => FilmFilterFields)
+  filters: FilmFilterFields;
 }

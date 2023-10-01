@@ -63,12 +63,17 @@ export class UserDao {
   async getAllUsers(
     count: number,
     page: number,
+    filters?: FindOptionsWhere<UserEntity>,
     order?: FindOptionsOrder<UserEntity>,
   ): Promise<UserEntity[]> {
     return this.userRepository.find({
       select: ["id", "nickname", "rating", "about", "role"],
+      relations: {
+        reviews: true,
+      },
       take: count,
       skip: count * (page - 1),
+      where: filters,
       order,
     });
   }

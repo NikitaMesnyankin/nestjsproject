@@ -6,8 +6,18 @@ import {
   NotEquals,
   Min,
   Max,
+  IsOptional,
+  IsBoolean,
+  IsIn,
+  ValidateNested,
 } from "class-validator";
 import * as i from "../../entities/interfaces";
+import {
+  OrderDirection,
+  OrderDirections,
+  PaginationDto,
+} from "../../helpers/dto";
+import { Type } from "class-transformer";
 
 export class ReviewDto implements i.Interfaces.Review {
   @ApiProperty({
@@ -43,4 +53,41 @@ export class ReviewDto implements i.Interfaces.Review {
   @Min(1)
   @Max(5)
   score: number;
+}
+
+export class ReviewFilterFields {
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isActivated: boolean;
+}
+
+export class ReviewOrderByFields {
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(OrderDirections)
+  karma: OrderDirection;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(OrderDirections)
+  createdAt: OrderDirection;
+}
+
+export class SearchReviewsFieldsDto extends PaginationDto {
+  @ValidateNested()
+  @Type(() => ReviewOrderByFields)
+  order: ReviewOrderByFields;
+
+  @ValidateNested()
+  @Type(() => ReviewFilterFields)
+  filters: ReviewFilterFields;
 }

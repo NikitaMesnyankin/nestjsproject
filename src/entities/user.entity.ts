@@ -4,10 +4,12 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
 } from "typeorm";
 import * as i from "./interfaces";
+import { ReviewEntity } from "./review.entity";
 
-@Entity({ name: "users", synchronize: true })
+@Entity({ name: "users", synchronize: false })
 export class UserEntity implements i.Interfaces.User {
   @PrimaryGeneratedColumn("increment", { type: "integer" })
   id: number;
@@ -67,4 +69,7 @@ export class UserEntity implements i.Interfaces.User {
 
   @UpdateDateColumn({ name: "modified_at", type: "timestamp with time zone" })
   modifiedAt: string;
+
+  @OneToMany((type) => ReviewEntity, (review) => review.user)
+  reviews: ReviewEntity[];
 }

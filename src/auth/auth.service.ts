@@ -39,10 +39,10 @@ export class AuthService {
     return user[0];
   }
 
-  async generateJwtToken({ id, email }: i.Interfaces.UserInReq) {
-    const payload: ValidationPayload = { id, email };
-    Logger.warn(payload);
-    Logger.error(this.jwtService.sign(payload));
+  async generateJwtToken({ id, email, role }: i.Interfaces.UserInReq) {
+    const payload: ValidationPayload = { id, email, role };
+    Logger.warn(`PAYLOAD: ${JSON.stringify(payload)}`);
+    //Logger.error(this.jwtService.sign(payload));
     return this.jwtService.sign(payload);
   }
 }

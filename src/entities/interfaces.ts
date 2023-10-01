@@ -1,4 +1,5 @@
 import { FindOptionsOrderValue } from "typeorm";
+import { ValidationPayload } from "../auth/strategies/jwt.strategy";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Interfaces {
   export interface User {
@@ -16,10 +17,15 @@ export namespace Interfaces {
     role?: Roles;
   }
 
-  export type UserInReq = Pick<User, keyof User> & { id: number };
+  export type UserInReq = Pick<User, keyof User> & { id: number; role: Roles };
   export type UserReq = Request & {
     user: UserInReq;
   };
+
+  export interface JwtToken extends ValidationPayload {
+    iat: number;
+    exp: number;
+  }
 
   export interface Film {
     id?: number;
@@ -41,6 +47,7 @@ export namespace Interfaces {
     karma?: number;
     createdAt?: string;
     modifiedAt?: string;
+    isValidated?: boolean;
   }
 
   export enum Roles {

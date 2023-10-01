@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindOptionsWhere, Repository } from "typeorm";
+import { FindOptionsOrder, FindOptionsWhere, Repository } from "typeorm";
 import { FilmEntity } from "../../entities/film.entity";
 
 @Injectable()
@@ -36,13 +36,20 @@ export class FilmDao {
     });
   }
 
-  async getAllFilms(count: number, page: number): Promise<FilmEntity[]> {
+  async getAllFilms(
+    count: number,
+    page: number,
+    filters?: FindOptionsWhere<FilmEntity>,
+    order?: FindOptionsOrder<FilmEntity>,
+  ): Promise<FilmEntity[]> {
     return this.filmRepository.find({
       take: count,
       skip: count * (page - 1),
       relations: {
         reviews: true,
       },
+      where: filters,
+      order,
     });
   }
 }

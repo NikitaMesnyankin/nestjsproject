@@ -3,6 +3,8 @@ import { ReviewData, ReviewDao } from "./dao/review-dao";
 import { ReviewEntity } from "../entities/review.entity";
 import { ReviewAlreadyExists } from "./errors";
 import { FilmNotFound } from "../films/errors";
+import { UserNotFound } from "../users/errors";
+import { FindOptionsOrder, FindOptionsWhere } from "typeorm";
 
 @Injectable()
 export class ReviewsService {
@@ -15,6 +17,9 @@ export class ReviewsService {
     }
     const createdReview = await this.reviewDao.createReview(reviewData);
     if (!(createdReview instanceof ReviewEntity)) {
+      if (createdReview.isUserNotFound) {
+        throw new UserNotFound();
+      }
       if (createdReview.isFilmNotFound) {
         throw new FilmNotFound();
       }
@@ -29,7 +34,13 @@ export class ReviewsService {
   async getAllReviews(
     count: number,
     page: number,
-  ): Promise<Partial<ReviewEntity>[]> {
-    return await this.reviewDao.getAllReviews(count, page);
+    filters?: FindOptionsWhere<ReviewEntity>,
+    order?: FindOptionsOrder<ReviewEntity>,
+  ): Promise<ReviewEntity[]> {
+    return await this.reviewDao.getAllReviews(count, page, filters, order);
+  }
+
+  async validateReview(reviewId: number): Promise<ReviewEntity | null> {
+    return await this.reviewDao.validateReview(reviewId);
   }
 }

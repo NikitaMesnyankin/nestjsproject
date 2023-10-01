@@ -1,15 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { UsersService } from "src/users/users.service";
-import { Logger } from "@nestjs/common";
 import { Request } from "express";
 import * as util from "util";
+import * as i from "../../entities/interfaces";
 
 export type ValidationPayload = {
   email: string;
   id: number;
+  role: i.Interfaces.Roles;
 };
 
 @Injectable()
@@ -23,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       //jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          Logger.error(util.inspect(request.cookies));
+          Logger.error(`REQUEST COOKIES : ${util.inspect(request.cookies)}`);
           return request.cookies[configService.get("AUTH_COOKIE_NAME")];
         },
       ]),
@@ -39,8 +40,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: ValidationPayload) {
-    const a = await this.userService.getUserById(payload.id);
-    Logger.error(JSON.stringify(a));
-    return a;
+    Logger.error("VALIDATE FUNCTION");
+    return await this.userService.getUserById(payload.id);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from "./errors";
 import * as i from "../entities/interfaces";
 import { UserEntity } from "../entities/user.entity";
-import { FindOptionsOrder } from "typeorm";
+import { FindOptionsOrder, FindOptionsWhere } from "typeorm";
 
 @Injectable()
 export class UsersService {
@@ -54,9 +54,10 @@ export class UsersService {
   async getAllUsers(
     count: number,
     page: number,
+    filters?: FindOptionsWhere<UserEntity>,
     order?: FindOptionsOrder<UserEntity>,
   ): Promise<Partial<UserEntity>[]> {
-    return await this.userDao.getAllUsers(count, page, order);
+    return await this.userDao.getAllUsers(count, page, filters, order);
   }
 
   async getUsersByFilters(filters: UserData): Promise<Partial<UserEntity>[]> {

@@ -1,8 +1,7 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
+import { Body, Controller, HttpCode, Post } from "@nestjs/common";
 import { FilmsService } from "./films.service";
 import * as i from "../entities/interfaces";
-import { FilmDto } from "./dto/film-dto";
-import { PaginationDto } from "../helpers/dto";
+import { FilmDto, SearchFilmsFieldsDto } from "./dto/film-dto";
 
 @Controller("/films")
 export class FilmsController {
@@ -14,11 +13,16 @@ export class FilmsController {
     return await this.filmsService.addFilm(body);
   }
 
-  @Get()
+  @Post("/search")
   @HttpCode(200)
   async getAllUsers(
-    @Query() query: PaginationDto,
+    @Body() body: SearchFilmsFieldsDto,
   ): Promise<Partial<i.Interfaces.User>[]> {
-    return await this.filmsService.getAllFilms(query.count, query.page);
+    return await this.filmsService.getAllFilms(
+      body.count,
+      body.page,
+      body.filters ?? {},
+      body.order,
+    );
   }
 }

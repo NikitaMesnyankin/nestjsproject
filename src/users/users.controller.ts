@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  UseGuards,
+  Request,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { UsersService } from "./users.service";
 import { MailerService } from "../mailer/mailer.service";
@@ -7,7 +16,8 @@ import {
   SearchUsersFieldsDto,
   UserActivationLinkDto,
   UserDto,
-} from "./dto/user.dto";
+} from "./dto/user-dto";
+import { Roles, RolesGuard } from "../auth/guards/roles.guard";
 
 @Controller("/users")
 export class UsersController {
@@ -46,14 +56,18 @@ export class UsersController {
     return await this.userService.activateUserByLink(query.activationLink);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles("USER", "ADMIN")
   @Post("/search")
   @HttpCode(200)
   async getAllUsers(
     @Body() body: SearchUsersFieldsDto,
+    @Request() request,
   ): Promise<Partial<i.Interfaces.User>[]> {
     return await this.userService.getAllUsers(
       body.count,
       body.page,
+      !request.role || request.role === "USER" ? { isActivated: true } : {},
       body.order,
     );
   }
