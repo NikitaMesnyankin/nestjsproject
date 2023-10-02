@@ -20,6 +20,8 @@ export class ReviewsController {
 
   @Post("/")
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles("USER", "ADMIN")
   @HttpCode(201)
   async publish(@Body() body: ReviewDto): Promise<i.Interfaces.Review> {
     return await this.reviewsService.addReview(body);
